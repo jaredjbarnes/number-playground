@@ -46,6 +46,6 @@ describe("Dynamic Axis", ()=>{
     expect(indexes.length).toBe(5);
 
     indexes = axis.getIndexesWithinRange(100, 400);
-    expect(indexes.length).toBe(5);
+    expect(indexes.length).toBe(6);
   });
 });
