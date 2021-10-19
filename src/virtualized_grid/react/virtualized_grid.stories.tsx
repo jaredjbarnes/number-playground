@@ -12,7 +12,9 @@ const renderCell = (cell: Cell<React.ReactElement>) => {
     position: "absolute",
     top: 0,
     left: 0,
-    transform: `translate(${cell.left}px,${cell.top}px)`,
+    transform: `translate(${cell.left + cell.rowHeaderWidth}px,${
+      cell.top + cell.columnHeaderHeight
+    }px)`,
     width: `${cell.width}px`,
     height: `${cell.height}px`,
     borderRight: "1px solid #ccc",
@@ -35,15 +37,13 @@ const renderColumnHeader = (header: Header<React.ReactElement>) => {
     position: "absolute",
     top: 0,
     left: 0,
-    transform: `translate(${header.left}px,${header.top}px)`,
+    transform: `translate(${header.left + header.offset}px,${header.top}px)`,
     width: `${header.width}px`,
     height: `${header.height}px`,
     borderRight: "1px solid #ccc",
-    borderBottom: "1px solid #ccc",
     lineHeight: `${header.height}px`,
     paddingLeft: "8px",
     boxSizing: "border-box",
-    zIndex: 2,
     backgroundColor: "#fff",
   };
 
@@ -55,15 +55,13 @@ const renderRowHeader = (header: Header<React.ReactElement>) => {
     position: "absolute",
     top: 0,
     left: 0,
-    transform: `translate(${header.left}px,${header.top}px)`,
+    transform: `translate(${header.left}px,${header.top + header.offset}px)`,
     width: `${header.width}px`,
     height: `${header.height}px`,
-    borderRight: "1px solid #ccc",
     borderBottom: "1px solid #ccc",
     lineHeight: `${header.height}px`,
     paddingLeft: "8px",
     boxSizing: "border-box",
-    zIndex: 2,
     backgroundColor: "#fff",
   };
 

@@ -14,6 +14,8 @@ export interface Cell<T> {
   width: number;
   height: number;
   value: T | null;
+  columnHeaderHeight: number;
+  rowHeaderWidth: number;
 }
 
 export interface Header<T> extends Index {
@@ -24,6 +26,7 @@ export interface Header<T> extends Index {
   right: number;
   width: number;
   height: number;
+  offset: number;
 }
 
 interface VirtualizedGridState<TRender, TRenderColumnHeader, TRenderRowHeader>
@@ -65,6 +68,8 @@ export class VirtualizedGridDomain<
     left: 0,
     width: 0,
     height: 0,
+    columnHeaderHeight: 0,
+    rowHeaderWidth: 0,
     value: null,
   }));
 
@@ -79,6 +84,7 @@ export class VirtualizedGridDomain<
       right: 0,
       width: 0,
       height: 0,
+      offset: 0,
       value: null,
     })
   );
@@ -93,6 +99,7 @@ export class VirtualizedGridDomain<
     right: 0,
     width: 0,
     height: 0,
+    offset: 0,
     value: null,
   }));
 
@@ -177,12 +184,14 @@ export class VirtualizedGridDomain<
             const cell = this.cellsFactory.useInstance();
             cell.rowIndex = row.index;
             cell.columnIndex = column.index;
-            cell.top = row.start + columnHeaderHeight;
-            cell.bottom = row.end + columnHeaderHeight;
-            cell.left = column.start + rowHeaderWidth;
-            cell.right = column.end + rowHeaderWidth;
+            cell.top = row.start;
+            cell.bottom = row.end;
+            cell.left = column.start;
+            cell.right = column.end;
             cell.width = column.end - column.start;
             cell.height = row.end - row.start;
+            cell.columnHeaderHeight = columnHeaderHeight;
+            cell.rowHeaderWidth = rowHeaderWidth;
             cell.value = this.renderCell(cell);
 
             cells.push(cell);
@@ -207,15 +216,16 @@ export class VirtualizedGridDomain<
         const columnHeader = this.columnsHeadersFactory.useInstance();
 
         columnHeader.index = column.index;
-        columnHeader.start = column.start + rowHeaderWidth;
-        columnHeader.end = column.end + rowHeaderWidth;
+        columnHeader.start = column.start;
+        columnHeader.end = column.end;
         columnHeader.top = 0;
         columnHeader.bottom = columnHeaderHeight;
-        columnHeader.left = column.start + rowHeaderWidth;
-        columnHeader.right = column.end + rowHeaderWidth;
+        columnHeader.left = column.start;
+        columnHeader.right = column.end;
         columnHeader.width = columnHeader.right - columnHeader.left;
         columnHeader.height = columnHeader.bottom - columnHeader.top;
         columnHeader.value = this.renderColumnHeader(columnHeader);
+        columnHeader.offset = rowHeaderWidth;
 
         columnHeaders.push(columnHeader);
       });
@@ -225,8 +235,8 @@ export class VirtualizedGridDomain<
   }
 
   private generateRowHeaders(rows: Index[]) {
-    const columnHeaderHeight = this.state.columnHeaderHeight.getValue();
     const rowHeaderWidth = this.state.rowHeaderWidth.getValue();
+    const columnHeaderHeight = this.state.columnHeaderHeight.getValue();
 
     this.rowHeadersFactory.releaseAll();
 
@@ -237,15 +247,16 @@ export class VirtualizedGridDomain<
         const rowHeader = this.rowHeadersFactory.useInstance();
 
         rowHeader.index = row.index;
-        rowHeader.start = row.start + columnHeaderHeight;
-        rowHeader.end = row.end + columnHeaderHeight;
+        rowHeader.start = row.start;
+        rowHeader.end = row.end;
         rowHeader.left = 0;
         rowHeader.right = rowHeaderWidth;
-        rowHeader.top = row.start + columnHeaderHeight;
-        rowHeader.bottom = row.end + columnHeaderHeight;
+        rowHeader.top = row.start;
+        rowHeader.bottom = row.end;
         rowHeader.width = rowHeader.right - rowHeader.left;
         rowHeader.height = rowHeader.bottom - rowHeader.top;
         rowHeader.value = this.renderRowHeader(rowHeader);
+        rowHeader.offset = columnHeaderHeight;
 
         rowHeaders.push(rowHeader);
       });
@@ -311,10 +322,10 @@ export class VirtualizedGridDomain<
   }
 
   getWidth() {
-    return this.columnAxis.getSize();
+    return this.columnAxis.getSize() + this.state.rowHeaderWidth.getValue();
   }
 
   getHeight() {
-    return this.rowAxis.getSize();
+    return this.rowAxis.getSize() + this.state.columnHeaderHeight.getValue();
   }
 }

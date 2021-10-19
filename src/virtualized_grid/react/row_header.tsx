@@ -12,6 +12,8 @@ const useStyles = createUseStyles(
       left: 0,
       height: "100%",
       zIndex: 2,
+      backgroundColor: "#fff",
+      boxShadow: "0px 4px 10px rgba(0,0,0,0.25)",
     },
   },
   { name: "RowHeader" }

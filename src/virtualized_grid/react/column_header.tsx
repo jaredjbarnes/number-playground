@@ -12,12 +12,13 @@ const useStyles = createUseStyles(
       left: 0,
       width: "100%",
       zIndex: 3,
+      backgroundColor: "#fff",
+      boxShadow: "0px 4px 10px rgba(0,0,0,0.25)",
     },
     voidSection: {
       position: "absolute",
       top: 0,
       left: 0,
-      backgroundColor: "#ccc",
     },
   },
   { name: "ColumnHeader" }
