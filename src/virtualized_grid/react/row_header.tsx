@@ -11,6 +11,7 @@ const useStyles = createUseStyles(
       top: 0,
       left: 0,
       height: "100%",
+      zIndex: 2,
     },
   },
   { name: "RowHeader" }
@@ -27,11 +28,13 @@ export function RowHeader({ className, style, virtualizedGridDomain }: Props) {
   const broadcasts = virtualizedGridDomain.broadcasts;
 
   const width = useAsyncValue(broadcasts.rowHeaderWidth);
-  const columnHeaders = useAsyncValue(broadcasts.columnHeaders);
+  const offset = useAsyncValue(broadcasts.columnHeaderHeight);
+  const columnHeaders = useAsyncValue(broadcasts.rowHeaders);
 
   const fullStyle = {
     ...style,
     width: `${width}px`,
+    transform: `translate(0px, -${offset}px)`,
   };
   return (
     <div className={clsx(classes.container, className)} style={fullStyle}>

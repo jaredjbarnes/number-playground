@@ -12,7 +12,6 @@ const useStyles = createUseStyles(
       overflow: "auto",
     },
     content: {
-      overflow: "hidden",
     },
   },
   { name: "Cells" }

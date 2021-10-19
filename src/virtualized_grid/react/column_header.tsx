@@ -11,6 +11,13 @@ const useStyles = createUseStyles(
       top: 0,
       left: 0,
       width: "100%",
+      zIndex: 3,
+    },
+    voidSection: {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      backgroundColor: "#ccc",
     },
   },
   { name: "ColumnHeader" }
@@ -31,15 +38,23 @@ export function ColumnHeader({
   const broadcasts = virtualizedGridDomain.broadcasts;
 
   const height = useAsyncValue(broadcasts.columnHeaderHeight);
+  const rowHeaderWidth = useAsyncValue(broadcasts.rowHeaderWidth);
   const columnHeaders = useAsyncValue(broadcasts.columnHeaders);
 
   const fullStyle = {
     ...style,
     height: `${height}px`,
   };
+
+  const voidStyle = {
+    width: `${rowHeaderWidth}px`,
+    height: `${height}px`,
+  };
+
   return (
     <div className={clsx(classes.container, className)} style={fullStyle}>
       {columnHeaders.map((header) => header.value)}
+      <div className={classes.voidSection} style={voidStyle}></div>
     </div>
   );
 }

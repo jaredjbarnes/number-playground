@@ -1,5 +1,5 @@
 import React from "react";
-import { Cell } from "../domain/virtualized_grid_domain";
+import { Cell, Header } from "../domain/virtualized_grid_domain";
 import { VirtualizedGrid } from "./virtualized_grid";
 
 export default {
@@ -30,6 +30,46 @@ const renderCell = (cell: Cell<React.ReactElement>) => {
   );
 };
 
+const renderColumnHeader = (header: Header<React.ReactElement>) => {
+  const style: React.CSSProperties = {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    transform: `translate(${header.left}px,${header.top}px)`,
+    width: `${header.width}px`,
+    height: `${header.height}px`,
+    borderRight: "1px solid #ccc",
+    borderBottom: "1px solid #ccc",
+    lineHeight: `${header.height}px`,
+    paddingLeft: "8px",
+    boxSizing: "border-box",
+    zIndex: 2,
+    backgroundColor: "#fff",
+  };
+
+  return <div key={`${header.index}`} style={style}>{`${header.index}`}</div>;
+};
+
+const renderRowHeader = (header: Header<React.ReactElement>) => {
+  const style: React.CSSProperties = {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    transform: `translate(${header.left}px,${header.top}px)`,
+    width: `${header.width}px`,
+    height: `${header.height}px`,
+    borderRight: "1px solid #ccc",
+    borderBottom: "1px solid #ccc",
+    lineHeight: `${header.height}px`,
+    paddingLeft: "8px",
+    boxSizing: "border-box",
+    zIndex: 2,
+    backgroundColor: "#fff",
+  };
+
+  return <div key={`${header.index}`} style={style}>{`${header.index}`}</div>;
+};
+
 export const Hello = () => {
   return (
     <VirtualizedGrid
@@ -37,8 +77,10 @@ export const Hello = () => {
       rowsLength={100}
       columnsLength={100}
       renderCell={renderCell}
-      renderColumnHeader={(header) => null}
-      renderRowHeader={(header) => null}
+      rowHeaderWidth={50}
+      columnHeaderHeight={30}
+      renderColumnHeader={renderColumnHeader}
+      renderRowHeader={renderRowHeader}
       defaultColumnWidth={100}
       customColumns={[{ index: 1, size: 200 }]}
       customRows={[{ index: 50, size: 300 }]}

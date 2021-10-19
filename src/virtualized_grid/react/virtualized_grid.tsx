@@ -3,6 +3,7 @@ import {
   Cell,
   VirtualizedGridDomain,
   Index,
+  Header,
 } from "../domain/virtualized_grid_domain";
 import { createUseStyles } from "react-jss";
 import clsx from "clsx";
@@ -26,12 +27,16 @@ export interface Props {
   style?: React.CSSProperties;
   className?: string;
   renderCell: (cell: Cell<React.ReactElement>) => React.ReactElement;
-  renderColumnHeader: (index: Index) => React.ReactElement;
-  renderRowHeader: (index: Index) => React.ReactElement;
+  renderColumnHeader: (
+    header: Header<React.ReactElement>
+  ) => React.ReactElement;
+  renderRowHeader: (header: Header<React.ReactElement>) => React.ReactElement;
   rowsLength?: number;
   columnsLength?: number;
   defaultColumnWidth?: number;
   defaultRowHeight?: number;
+  columnHeaderHeight?: number;
+  rowHeaderWidth?: number;
   customRows?: CustomSize[];
   customColumns?: CustomSize[];
 }
@@ -48,6 +53,8 @@ export function VirtualizedGrid({
   defaultRowHeight = 30,
   customRows,
   customColumns,
+  columnHeaderHeight = 0,
+  rowHeaderWidth = 0,
 }: Props) {
   const classes = useStyles();
   const [virtualizedGridDomain] = useState(
@@ -88,6 +95,14 @@ export function VirtualizedGrid({
   }, [virtualizedGridDomain, defaultRowHeight]);
 
   useLayoutEffect(() => {
+    virtualizedGridDomain.setColumnHeaderHeight(columnHeaderHeight);
+  }, [virtualizedGridDomain, columnHeaderHeight]);
+
+  useLayoutEffect(() => {
+    virtualizedGridDomain.setRowHeaderWidth(rowHeaderWidth);
+  }, [virtualizedGridDomain, rowHeaderWidth]);
+
+  useLayoutEffect(() => {
     if (Array.isArray(customColumns)) {
       customColumns.forEach((c) =>
         virtualizedGridDomain.setColumnWidth(c.index, c.size)
@@ -113,8 +128,8 @@ export function VirtualizedGrid({
       style={style}
       virtualizedGridDomain={virtualizedGridDomain}
     >
-      <RowHeader virtualizedGridDomain={virtualizedGridDomain} />
       <ColumnHeader virtualizedGridDomain={virtualizedGridDomain} />
+      <RowHeader virtualizedGridDomain={virtualizedGridDomain} />
     </Cells>
   );
 }
