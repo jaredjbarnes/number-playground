@@ -44,10 +44,12 @@ interface VirtualizedGridOptions<
   TRenderRowHeader
 > {
   renderCell: (cell: Cell<TRender>) => TRender;
-  renderColumnHeader: (
-    header: Header<TRenderColumnHeader>
-  ) => TRenderColumnHeader;
-  renderRowHeader: (header: Header<TRenderRowHeader>) => TRenderRowHeader;
+  renderColumnHeader:
+    | ((header: Header<TRenderColumnHeader>) => TRenderColumnHeader)
+    | null;
+  renderRowHeader:
+    | ((header: Header<TRenderRowHeader>) => TRenderRowHeader)
+    | null;
 }
 
 export class VirtualizedGridDomain<
@@ -111,12 +113,12 @@ export class VirtualizedGridDomain<
   };
 
   private renderCell: (cell: Cell<TRender>) => TRender;
-  private renderColumnHeader: (
-    header: Header<TRenderColumnHeader>
-  ) => TRenderColumnHeader;
-  private renderRowHeader: (
-    header: Header<TRenderRowHeader>
-  ) => TRenderRowHeader;
+  private renderColumnHeader:
+    | ((header: Header<TRenderColumnHeader>) => TRenderColumnHeader)
+    | null;
+  private renderRowHeader:
+    | ((header: Header<TRenderRowHeader>) => TRenderRowHeader)
+    | null;
 
   constructor(
     options: VirtualizedGridOptions<
@@ -211,6 +213,11 @@ export class VirtualizedGridDomain<
 
     this.state.columnHeaders.transformValue((columnHeaders) => {
       columnHeaders.length = 0;
+      const render = this.renderColumnHeader;
+
+      if (render == null) {
+        return columnHeaders;
+      }
 
       columns.forEach((column) => {
         const columnHeader = this.columnsHeadersFactory.useInstance();
@@ -224,7 +231,7 @@ export class VirtualizedGridDomain<
         columnHeader.right = column.end;
         columnHeader.width = columnHeader.right - columnHeader.left;
         columnHeader.height = columnHeader.bottom - columnHeader.top;
-        columnHeader.value = this.renderColumnHeader(columnHeader);
+        columnHeader.value = render(columnHeader);
         columnHeader.offset = rowHeaderWidth;
 
         columnHeaders.push(columnHeader);
@@ -242,6 +249,11 @@ export class VirtualizedGridDomain<
 
     this.state.rowHeaders.transformValue((rowHeaders) => {
       rowHeaders.length = 0;
+      const render = this.renderRowHeader;
+
+      if (render == null) {
+        return rowHeaders;
+      }
 
       rows.forEach((row) => {
         const rowHeader = this.rowHeadersFactory.useInstance();
@@ -255,7 +267,7 @@ export class VirtualizedGridDomain<
         rowHeader.bottom = row.end;
         rowHeader.width = rowHeader.right - rowHeader.left;
         rowHeader.height = rowHeader.bottom - rowHeader.top;
-        rowHeader.value = this.renderRowHeader(rowHeader);
+        rowHeader.value = render(rowHeader);
         rowHeader.offset = columnHeaderHeight;
 
         rowHeaders.push(rowHeader);
@@ -271,16 +283,18 @@ export class VirtualizedGridDomain<
   }
 
   setRenderColumnHeader(
-    renderColumnHeader: (
-      header: Header<TRenderColumnHeader>
-    ) => TRenderColumnHeader
+    renderColumnHeader:
+      | ((header: Header<TRenderColumnHeader>) => TRenderColumnHeader)
+      | null
   ) {
     this.renderColumnHeader = renderColumnHeader;
     this.generateCells();
   }
 
   setRenderRowHeader(
-    renderRowHeader: (header: Header<TRenderRowHeader>) => TRenderRowHeader
+    renderRowHeader:
+      | ((header: Header<TRenderRowHeader>) => TRenderRowHeader)
+      | null
   ) {
     this.renderRowHeader = renderRowHeader;
     this.generateCells();

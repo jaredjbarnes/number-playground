@@ -41,6 +41,7 @@ const renderColumnHeader = (header: Header<React.ReactElement>) => {
     width: `${header.width}px`,
     height: `${header.height}px`,
     borderRight: "1px solid #ccc",
+    borderLeft: header.index === 0 ? "1px solid #ccc" : "0px",
     lineHeight: `${header.height}px`,
     paddingLeft: "8px",
     boxSizing: "border-box",
@@ -68,12 +69,44 @@ const renderRowHeader = (header: Header<React.ReactElement>) => {
   return <div key={`${header.index}`} style={style}>{`${header.index}`}</div>;
 };
 
-export const Hello = () => {
+export const ColumnHeaders = () => {
   return (
     <VirtualizedGrid
-      style={{ width: "400px", height: "400px" }}
-      rowsLength={100}
-      columnsLength={100}
+      style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+      rowsLength={1000}
+      columnsLength={1000}
+      renderCell={renderCell}
+      columnHeaderHeight={30}
+      renderColumnHeader={renderColumnHeader}
+      defaultColumnWidth={100}
+      customColumns={[{ index: 1, size: 200 }]}
+      customRows={[{ index: 50, size: 300 }]}
+    />
+  );
+};
+
+export const RowHeaders = () => {
+  return (
+    <VirtualizedGrid
+      style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+      rowsLength={1000}
+      columnsLength={1000}
+      renderCell={renderCell}
+      rowHeaderWidth={50}
+      renderRowHeader={renderRowHeader}
+      defaultColumnWidth={100}
+      customColumns={[{ index: 1, size: 200 }]}
+      customRows={[{ index: 50, size: 300 }]}
+    />
+  );
+};
+
+export const WithBothHeaders = () => {
+  return (
+    <VirtualizedGrid
+      style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+      rowsLength={1000}
+      columnsLength={1000}
       renderCell={renderCell}
       rowHeaderWidth={50}
       columnHeaderHeight={30}

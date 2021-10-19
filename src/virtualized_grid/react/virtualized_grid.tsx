@@ -2,7 +2,6 @@ import React, { useState, useLayoutEffect, useEffect } from "react";
 import {
   Cell,
   VirtualizedGridDomain,
-  Index,
   Header,
 } from "../domain/virtualized_grid_domain";
 import { createUseStyles } from "react-jss";
@@ -27,10 +26,12 @@ export interface Props {
   style?: React.CSSProperties;
   className?: string;
   renderCell: (cell: Cell<React.ReactElement>) => React.ReactElement;
-  renderColumnHeader: (
-    header: Header<React.ReactElement>
-  ) => React.ReactElement;
-  renderRowHeader: (header: Header<React.ReactElement>) => React.ReactElement;
+  renderColumnHeader?:
+    | ((header: Header<React.ReactElement>) => React.ReactElement)
+    | null;
+  renderRowHeader?:
+    | ((header: Header<React.ReactElement>) => React.ReactElement)
+    | null;
   rowsLength?: number;
   columnsLength?: number;
   defaultColumnWidth?: number;
@@ -45,8 +46,8 @@ export function VirtualizedGrid({
   className,
   style,
   renderCell,
-  renderColumnHeader,
-  renderRowHeader,
+  renderColumnHeader = null,
+  renderRowHeader = null,
   rowsLength = 0,
   columnsLength = 0,
   defaultColumnWidth = 100,
