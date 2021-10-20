@@ -118,3 +118,45 @@ export const WithBothHeaders = () => {
     />
   );
 };
+
+export const LargeRows = () => {
+  return (
+    <VirtualizedGrid
+      style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+      rowsLength={1000}
+      columnsLength={1000}
+      renderCell={renderCell}
+      rowHeaderWidth={50}
+      columnHeaderHeight={30}
+      renderColumnHeader={renderColumnHeader}
+      renderRowHeader={renderRowHeader}
+      defaultColumnWidth={120}
+      defaultRowHeight={60}
+      customColumns={[
+        { index: 1, size: 200 },
+        { index: 4, size: 500 },
+      ]}
+      customRows={[
+        { index: 50, size: 300 },
+        { index: 3, size: 300 },
+      ]}
+    />
+  );
+};
+
+export const SmallTable = () => {
+  return (
+    <VirtualizedGrid
+      style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+      rowsLength={2}
+      columnsLength={2}
+      renderCell={renderCell}
+      rowHeaderWidth={50}
+      columnHeaderHeight={30}
+      renderColumnHeader={renderColumnHeader}
+      renderRowHeader={renderRowHeader}
+      defaultColumnWidth={120}
+      defaultRowHeight={60}
+    />
+  );
+};

@@ -12,6 +12,8 @@ const useStyles = createUseStyles(
       overflow: "auto",
     },
     content: {
+      minWidth: "100%",
+      minHeight: "100%",
     },
   },
   { name: "Cells" }
