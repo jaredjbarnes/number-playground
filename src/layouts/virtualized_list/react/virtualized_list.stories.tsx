@@ -11,6 +11,8 @@ export const FewItems = () => {
     <VirtualizedList>
       <div style={{ height: "30px", backgroundColor: "red" }}>0</div>
       <div style={{ height: "62px", backgroundColor: "blue" }}>1</div>
+      <div style={{ height: "147px", backgroundColor: "orange" }}>2</div>
+      <div style={{ height: "447px", backgroundColor: "pink" }}>3</div>
     </VirtualizedList>
   );
 };

@@ -33,6 +33,7 @@ export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
       () => new VirtualizedListDomain(50, children?.length)
     );
     const items = useAsyncValue(virtualizedListDomain.broadcasts.items);
+    const height = virtualizedListDomain.getHeight();
 
     const updateViewport = useCallback(
       (element: HTMLDivElement) => {
@@ -61,17 +62,19 @@ export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
         className={clsx(className, classes.container)}
         onScroll={({ currentTarget }) => updateViewport(currentTarget)}
       >
-        {items.map((item) => {
-          return (
-            <VirtualizedListItem
-              key={item.index}
-              item={item}
-              virtualizedListDomain={virtualizedListDomain}
-            >
-              {children[item.index]}
-            </VirtualizedListItem>
-          );
-        })}
+        <div style={{ height: `${height}px` }}>
+          {items.map((item) => {
+            return (
+              <VirtualizedListItem
+                key={item.index}
+                item={item}
+                virtualizedListDomain={virtualizedListDomain}
+              >
+                {children[item.index]}
+              </VirtualizedListItem>
+            );
+          })}
+        </div>
       </div>
     );
   }
