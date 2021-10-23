@@ -2,7 +2,7 @@ import React, { useCallback } from "react";
 import { VirtualizedGridDomain } from "../domain/virtualized_grid_domain";
 import { createUseStyles } from "react-jss";
 import clsx from "clsx";
-import { useAsyncValue } from "../../hex/hooks/useAsyncValue";
+import { useAsyncValue } from "../../../hex/hooks/useAsyncValue";
 
 const useStyles = createUseStyles(
   {
@@ -35,10 +35,12 @@ export function Cells({
   const classes = useStyles();
   const width = virtualizedGridDomain.getWidth();
   const height = virtualizedGridDomain.getHeight();
+  const columnHeaderHeight = virtualizedGridDomain.broadcasts.columnHeaderHeight.getValue();
+  const rowHeaderWidth = virtualizedGridDomain.broadcasts.rowHeaderWidth.getValue();
   const cells = useAsyncValue(virtualizedGridDomain.broadcasts.cells);
   const contentStyle = {
-    width: `${width}px`,
-    height: `${height}px`,
+    width: `${width + rowHeaderWidth}px`,
+    height: `${height + columnHeaderHeight}px`,
   };
 
   const updateViewport = useCallback(

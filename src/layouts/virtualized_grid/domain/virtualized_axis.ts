@@ -70,6 +70,12 @@ export class VirtualizedAxis {
     this.generateRegions();
   }
 
+  getSizeForIndex(index: number) {
+    const regionIndex = binarySearch(this.regions, index, this.findIndexIn);
+    const region = this.regions[regionIndex];
+    return region.size;
+  }
+
   private generateRegions() {
     let lastIndex = 0;
     let last = 0;
@@ -127,10 +133,20 @@ export class VirtualizedAxis {
     this.size = last;
   }
 
-  private compare(at: Region, lookFor: number) {
-    if (lookFor < at.start) {
+  private findIndexIn(at: Region, index: number) {
+    if (index < at.startIndex) {
       return -1;
-    } else if (lookFor > at.end) {
+    } else if (index > at.startIndex) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
+  private findRegionIn(at: Region, position: number) {
+    if (position < at.start) {
+      return -1;
+    } else if (position > at.end) {
       return 1;
     } else {
       return 0;
@@ -146,11 +162,11 @@ export class VirtualizedAxis {
     }
 
     const startRegionIndex = Math.max(
-      binarySearch(this.regions, start, this.compare),
+      binarySearch(this.regions, start, this.findRegionIn),
       0
     );
     const endRegionIndex = Math.max(
-      binarySearch(this.regions, end, this.compare),
+      binarySearch(this.regions, end, this.findRegionIn),
       startRegionIndex
     );
 

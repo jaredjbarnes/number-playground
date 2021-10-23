@@ -9,13 +9,21 @@ export function binarySearch<TItem, TValue>(
     // This is the same as Math.floor((upperbound + lowerbound) / 2);
     var checkIndex = (upperBound + lowerBound) >> 1;
     var result = compareFunc(array[checkIndex], lookFor);
+
     if (result > 0) {
       lowerBound = checkIndex + 1;
+      if (lowerBound > upperBound) {
+        return upperBound;
+      }
     } else if (result < 0) {
       upperBound = checkIndex - 1;
+      if (upperBound < lowerBound) {
+        return lowerBound;
+      }
     } else {
       return checkIndex;
     }
   }
-  return -lowerBound - 1;
+
+  return -1;
 }

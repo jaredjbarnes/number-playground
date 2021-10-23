@@ -1,5 +1,5 @@
-import { Domain, StateLike } from "../../hex/domain";
-import { ObservableValue } from "../../hex/ObservableValue";
+import { Domain, StateLike } from "../../../hex/domain";
+import { ObservableValue } from "../../../hex/ObservableValue";
 import { VirtualizedAxis, Index } from "./virtualized_axis";
 import { Factory } from "./factory";
 export type { Index } from "./virtualized_axis";
@@ -338,10 +338,10 @@ export class VirtualizedGridDomain<
   }
 
   getWidth() {
-    return this.columnAxis.getSize() + this.state.rowHeaderWidth.getValue();
+    return this.columnAxis.getSize();
   }
 
   getHeight() {
-    return this.rowAxis.getSize() + this.state.columnHeaderHeight.getValue();
+    return this.rowAxis.getSize();
   }
 }
