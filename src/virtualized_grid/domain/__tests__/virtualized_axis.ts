@@ -1,15 +1,15 @@
-import { DynamicAxis } from "../dynamic_axis";
+import { VirtualizedAxis } from "../virtualized_axis";
 
-describe("Dynamic Axis", ()=>{
-  test("No custom Sizes", ()=>{
-    const axis = new DynamicAxis(50, 100);
+describe("Dynamic Axis", () => {
+  test("No custom Sizes", () => {
+    const axis = new VirtualizedAxis(50, 100);
     const indexes = axis.getIndexesWithinRange(0, 100);
 
     expect(indexes.length).toBe(2);
   });
 
-  test("Custom size on left side", ()=>{
-    const axis = new DynamicAxis(50, 100);
+  test("Custom size on left side", () => {
+    const axis = new VirtualizedAxis(50, 100);
     axis.setCustomSize(0, 100);
 
     const indexes = axis.getIndexesWithinRange(0, 100);
@@ -17,8 +17,8 @@ describe("Dynamic Axis", ()=>{
     expect(indexes.length).toBe(1);
   });
 
-  test("Custom size on left side with more than one index.", ()=>{
-    const axis = new DynamicAxis(50, 100);
+  test("Custom size on left side with more than one index.", () => {
+    const axis = new VirtualizedAxis(50, 100);
     axis.setCustomSize(0, 100);
 
     const indexes = axis.getIndexesWithinRange(0, 101);
@@ -26,8 +26,8 @@ describe("Dynamic Axis", ()=>{
     expect(indexes.length).toBe(2);
   });
 
-  test("Bordered Custom Sizes.", ()=>{
-    const axis = new DynamicAxis(50, 100);
+  test("Bordered Custom Sizes.", () => {
+    const axis = new VirtualizedAxis(50, 100);
     axis.setCustomSize(0, 100);
     axis.setCustomSize(1, 75);
 
@@ -36,8 +36,8 @@ describe("Dynamic Axis", ()=>{
     expect(indexes.length).toBe(5);
   });
 
-  test("Multiple Custom Sizes with gaps.", ()=>{
-    const axis = new DynamicAxis(50, 100);
+  test("Multiple Custom Sizes with gaps.", () => {
+    const axis = new VirtualizedAxis(50, 100);
     axis.setCustomSize(0, 100);
     axis.setCustomSize(2, 75);
 

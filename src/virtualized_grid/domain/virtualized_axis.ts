@@ -20,7 +20,7 @@ interface Region {
   size: number;
 }
 
-export class DynamicAxis {
+export class VirtualizedAxis {
   private defaultIndexSize: number;
   private customSizesMap: { [key: number]: CustomSize } = {};
   private length: number = 0;

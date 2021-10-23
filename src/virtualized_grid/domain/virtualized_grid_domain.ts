@@ -1,8 +1,8 @@
 import { Domain, StateLike } from "../../hex/domain";
 import { ObservableValue } from "../../hex/ObservableValue";
-import { DynamicAxis, Index } from "./dynamic_axis";
+import { VirtualizedAxis, Index } from "./virtualized_axis";
 import { Factory } from "./factory";
-export type { Index } from "./dynamic_axis";
+export type { Index } from "./virtualized_axis";
 
 export interface Cell<T> {
   rowIndex: number;
@@ -59,8 +59,8 @@ export class VirtualizedGridDomain<
 > extends Domain<
   VirtualizedGridState<TRender, TRenderColumnHeader, TRenderRowHeader>
 > {
-  private columnAxis = new DynamicAxis(50, 0);
-  private rowAxis = new DynamicAxis(50, 0);
+  private columnAxis = new VirtualizedAxis(50, 0);
+  private rowAxis = new VirtualizedAxis(50, 0);
   private cellsFactory = new Factory<Cell<TRender>>(() => ({
     rowIndex: 0,
     columnIndex: 0,
@@ -231,8 +231,9 @@ export class VirtualizedGridDomain<
         columnHeader.right = column.end;
         columnHeader.width = columnHeader.right - columnHeader.left;
         columnHeader.height = columnHeader.bottom - columnHeader.top;
-        columnHeader.value = render(columnHeader);
         columnHeader.offset = rowHeaderWidth;
+
+        columnHeader.value = render(columnHeader);
 
         columnHeaders.push(columnHeader);
       });
@@ -267,8 +268,9 @@ export class VirtualizedGridDomain<
         rowHeader.bottom = row.end;
         rowHeader.width = rowHeader.right - rowHeader.left;
         rowHeader.height = rowHeader.bottom - rowHeader.top;
-        rowHeader.value = render(rowHeader);
         rowHeader.offset = columnHeaderHeight;
+
+        rowHeader.value = render(rowHeader);
 
         rowHeaders.push(rowHeader);
       });
