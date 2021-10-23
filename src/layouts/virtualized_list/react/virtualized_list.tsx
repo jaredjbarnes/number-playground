@@ -10,7 +10,6 @@ const useStyles = createUseStyles(
   {
     container: {
       position: "relative",
-      height: "100px",
       width: "100%",
       overflow: "auto",
     },
@@ -24,10 +23,14 @@ export interface Props {
   className?: string;
   style?: React.CSSProperties;
   children: React.ReactElement[];
+  buffer?: number;
 }
 
 export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
-  function VirtualizedList({ children, className }: Props, ref) {
+  function VirtualizedList(
+    { children, className, style, buffer = 0 }: Props,
+    ref
+  ) {
     const classes = useStyles();
     const [virtualizedListDomain] = useState(
       () => new VirtualizedListDomain(50, children?.length)
@@ -37,12 +40,14 @@ export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
 
     const updateViewport = useCallback(
       (element: HTMLDivElement) => {
-        const top = element.scrollTop;
+        const scrollTop = element.scrollTop;
+        const top = Math.max(scrollTop - buffer, 0);
         const height = element.offsetHeight;
-        const bottom = top + height;
+        const bottom = scrollTop + height + buffer;
+
         virtualizedListDomain.updateViewport(top, bottom);
       },
-      [virtualizedListDomain]
+      [virtualizedListDomain, buffer]
     );
 
     const containerRef = useCallback(
@@ -59,7 +64,8 @@ export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
     return (
       <div
         ref={forkedRef}
-        className={clsx(className, classes.container)}
+        className={clsx(classes.container, className)}
+        style={style}
         onScroll={({ currentTarget }) => updateViewport(currentTarget)}
       >
         <div style={{ height: `${height}px` }}>

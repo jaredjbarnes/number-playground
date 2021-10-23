@@ -42,7 +42,7 @@ export class VirtualizedListDomain extends Domain<VirtualizedListState> {
     });
     this.virtualAxis = new VirtualizedAxis(estimatedSize, length);
     this.debouncer = new DebounceRunner<void>(undefined, 16);
-    this.debouncer.runner.onChange(() => {
+    this.debouncer.runner.status.onChange(() => {
       this.updateVisibleItems();
     });
   }

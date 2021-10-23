@@ -8,11 +8,21 @@ export default {
 
 export const FewItems = () => {
   return (
-    <VirtualizedList>
+    <VirtualizedList
+      buffer={200}
+      style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
+    >
       <div style={{ height: "30px", backgroundColor: "red" }}>0</div>
       <div style={{ height: "62px", backgroundColor: "blue" }}>1</div>
       <div style={{ height: "147px", backgroundColor: "orange" }}>2</div>
       <div style={{ height: "447px", backgroundColor: "pink" }}>3</div>
+      <div style={{ height: "447px", backgroundColor: "green" }}>3</div>
+      <div style={{ height: "638px", backgroundColor: "teal" }}>3</div>
+      <div style={{ height: "387px", backgroundColor: "black" }}>3</div>
+      <div style={{ height: "47px", backgroundColor: "grey" }}>3</div>
+      <div style={{ height: "462px", backgroundColor: "red" }}>3</div>
+      <div style={{ height: "1000px", backgroundColor: "orange" }}>3</div>
+      <div style={{ height: "225px", backgroundColor: "pink" }}>3</div>
     </VirtualizedList>
   );
 };
