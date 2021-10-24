@@ -12,6 +12,7 @@ export const FewItems = () => {
       buffer={200}
       style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
     >
+      <div>Hello World!</div>
       <div style={{ height: "30px", backgroundColor: "red" }}>0</div>
       <div style={{ height: "62px", backgroundColor: "blue" }}>1</div>
       <div style={{ height: "147px", backgroundColor: "orange" }}>2</div>

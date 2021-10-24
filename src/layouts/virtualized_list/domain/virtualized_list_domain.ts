@@ -24,6 +24,7 @@ export class VirtualizedListDomain extends Domain<VirtualizedListState> {
   };
 
   private virtualAxis: VirtualizedAxis;
+  private estimatedSize: number;
   private debouncer: DebounceRunner<void>;
   private factory = new Factory<Item>(() => {
     return {
@@ -40,6 +41,7 @@ export class VirtualizedListDomain extends Domain<VirtualizedListState> {
       headerHeight: new ObservableValue(0),
       footerHeight: new ObservableValue(0),
     });
+    this.estimatedSize = estimatedSize;
     this.virtualAxis = new VirtualizedAxis(estimatedSize, length);
     this.debouncer = new DebounceRunner<void>(undefined, 16);
     this.debouncer.runner.status.onChange(() => {
@@ -79,7 +81,7 @@ export class VirtualizedListDomain extends Domain<VirtualizedListState> {
     if (top !== this.viewport.top || bottom !== this.viewport.bottom) {
       this.viewport.top = top;
       this.viewport.bottom = bottom;
-      this.update();
+      this.updateVisibleItems();
     }
   }
 
@@ -88,21 +90,25 @@ export class VirtualizedListDomain extends Domain<VirtualizedListState> {
   }
 
   setItemHeight(index: number, height: number) {
-    const size = this.virtualAxis.getSizeForIndex(index);
+    const size = this.virtualAxis.getCustomSize(index);
     if (size !== height) {
       this.virtualAxis.setCustomSize(index, height);
-      this.update();
+      this.updateVisibleItems();
     }
+  }
+
+  getItemHeight(index: number) {
+    return this.virtualAxis.getCustomSize(index) || this.estimatedSize;
   }
 
   setHeaderHeight(value: number) {
     this.state.headerHeight.setValue(value);
-    this.update();
+    this.updateVisibleItems();
   }
 
   setFooterHeight(value: number) {
     this.state.footerHeight.setValue(value);
-    this.update();
+    this.updateVisibleItems();
   }
 
   getHeight() {

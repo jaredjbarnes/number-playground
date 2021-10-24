@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useRef, useLayoutEffect } from "react";
 import { VirtualizedListDomain } from "../domain/virtualized_list_domain";
 import { VirtualizedListItem } from "./virtualized_list_item";
 import { createUseStyles } from "react-jss";
@@ -36,6 +36,7 @@ export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
       () => new VirtualizedListDomain(50, children?.length)
     );
     const items = useAsyncValue(virtualizedListDomain.broadcasts.items);
+    const containerRef = useRef<HTMLDivElement | null>(null);
     const height = virtualizedListDomain.getHeight();
 
     const updateViewport = useCallback(
@@ -50,14 +51,11 @@ export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
       [virtualizedListDomain, buffer]
     );
 
-    const containerRef = useCallback(
-      (element: HTMLDivElement | null) => {
-        if (element != null) {
-          updateViewport(element);
-        }
-      },
-      [updateViewport]
-    );
+    useLayoutEffect(() => {
+      if (containerRef.current != null) {
+        updateViewport(containerRef.current);
+      }
+    }, []);
 
     const forkedRef = useForkRef(ref, containerRef);
 

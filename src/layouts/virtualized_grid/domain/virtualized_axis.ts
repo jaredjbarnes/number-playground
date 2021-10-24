@@ -70,10 +70,8 @@ export class VirtualizedAxis {
     this.generateRegions();
   }
 
-  getSizeForIndex(index: number) {
-    const regionIndex = binarySearch(this.regions, index, this.findIndexIn);
-    const region = this.regions[regionIndex];
-    return region.size;
+  getCustomSize(index: number) {
+    return this.customSizesMap[index]?.size || null;
   }
 
   private generateRegions() {
@@ -131,16 +129,6 @@ export class VirtualizedAxis {
     }
 
     this.size = last;
-  }
-
-  private findIndexIn(at: Region, index: number) {
-    if (index < at.startIndex) {
-      return -1;
-    } else if (index > at.startIndex) {
-      return 1;
-    } else {
-      return 0;
-    }
   }
 
   private findRegionIn(at: Region, position: number) {

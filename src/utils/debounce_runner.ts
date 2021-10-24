@@ -42,7 +42,6 @@ export class DebounceRunner<T> {
   hit(value: T, delay?: number) {
     delay = typeof delay === "number" ? delay : this.delay;
     if (this.timeoutId === -1) {
-      this.runner.setValue(value);
       const action = new AsyncAction(
         () =>
           new Promise<T>((resolve) => {

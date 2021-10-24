@@ -1,4 +1,4 @@
-import React, { useCallback } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { useForkRef } from "../../../hooks/use_fork_ref";
 import { VirtualizedListDomain, Item } from "../domain/virtualized_list_domain";
 import { createUseStyles } from "react-jss";
@@ -29,8 +29,8 @@ export const VirtualizedListItem = React.forwardRef<HTMLDivElement, Props>(
     { item, children, virtualizedListDomain }: Props,
     ref
   ) {
-    const classes = useStyles();
     const index = item.index;
+    const classes = useStyles();
     const y = item.start + item.offset;
 
     const mountRef = useCallback(
