@@ -5,7 +5,6 @@ import {
   Index,
   VirtualizedAxis,
 } from "../../virtualized_grid/domain/virtualized_axis";
-import { DebounceRunner } from "../../../utils/debounce_runner";
 
 export interface Item extends Index {
   offset: number;
@@ -25,7 +24,6 @@ export class VirtualizedListDomain extends Domain<VirtualizedListState> {
 
   private virtualAxis: VirtualizedAxis;
   private estimatedSize: number;
-  private debouncer: DebounceRunner<void>;
   private factory = new Factory<Item>(() => {
     return {
       index: 0,
@@ -43,13 +41,9 @@ export class VirtualizedListDomain extends Domain<VirtualizedListState> {
     });
     this.estimatedSize = estimatedSize;
     this.virtualAxis = new VirtualizedAxis(estimatedSize, length);
-    this.debouncer = new DebounceRunner<void>(undefined, 16);
-    this.debouncer.runner.status.onChange(() => {
-      this.updateVisibleItems();
-    });
   }
 
-  private updateVisibleItems() {
+  private update() {
     this.factory.releaseAll();
 
     const headerHeight = this.state.headerHeight.getValue();
@@ -81,19 +75,15 @@ export class VirtualizedListDomain extends Domain<VirtualizedListState> {
     if (top !== this.viewport.top || bottom !== this.viewport.bottom) {
       this.viewport.top = top;
       this.viewport.bottom = bottom;
-      this.updateVisibleItems();
+      this.update();
     }
-  }
-
-  update() {
-    this.debouncer.hit();
   }
 
   setItemHeight(index: number, height: number) {
     const size = this.virtualAxis.getCustomSize(index);
     if (size !== height) {
       this.virtualAxis.setCustomSize(index, height);
-      this.updateVisibleItems();
+      this.update();
     }
   }
 
@@ -103,12 +93,12 @@ export class VirtualizedListDomain extends Domain<VirtualizedListState> {
 
   setHeaderHeight(value: number) {
     this.state.headerHeight.setValue(value);
-    this.updateVisibleItems();
+    this.update();
   }
 
   setFooterHeight(value: number) {
     this.state.footerHeight.setValue(value);
-    this.updateVisibleItems();
+    this.update();
   }
 
   getHeight() {
@@ -117,6 +107,5 @@ export class VirtualizedListDomain extends Domain<VirtualizedListState> {
 
   dispose() {
     super.dispose();
-    this.debouncer.dispose();
   }
 }

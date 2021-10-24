@@ -55,7 +55,7 @@ export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
       if (containerRef.current != null) {
         updateViewport(containerRef.current);
       }
-    }, []);
+    }, [updateViewport]);
 
     const forkedRef = useForkRef(ref, containerRef);
 
