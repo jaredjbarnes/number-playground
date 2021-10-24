@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useCallback } from "react";
 import { useForkRef } from "../../../hooks/use_fork_ref";
 import { VirtualizedListDomain, Item } from "../domain/virtualized_list_domain";
 import { createUseStyles } from "react-jss";
@@ -10,7 +10,6 @@ const useStyles = createUseStyles(
       top: 0,
       left: 0,
       width: "100%",
-      transform: "translate(0,0,0)",
     },
   },
   {

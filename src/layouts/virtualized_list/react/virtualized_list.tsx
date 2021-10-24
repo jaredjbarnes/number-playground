@@ -1,6 +1,8 @@
 import React, { useCallback, useState, useRef, useLayoutEffect } from "react";
 import { VirtualizedListDomain } from "../domain/virtualized_list_domain";
 import { VirtualizedListItem } from "./virtualized_list_item";
+import { VirtualizedListHeader } from "./virtualized_list_header";
+import { VirtualizedListFooter } from "./virtualized_list_footer";
 import { createUseStyles } from "react-jss";
 import clsx from "clsx";
 import { useAsyncValue } from "../../../hex/hooks/useAsyncValue";
@@ -23,12 +25,14 @@ export interface Props {
   className?: string;
   style?: React.CSSProperties;
   children: React.ReactElement[];
+  header?: React.ReactElement;
+  footer?: React.ReactElement;
   buffer?: number;
 }
 
 export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
   function VirtualizedList(
-    { children, className, style, buffer = 0 }: Props,
+    { children, className, style, buffer = 0, header, footer }: Props,
     ref
   ) {
     const classes = useStyles();
@@ -36,6 +40,9 @@ export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
       () => new VirtualizedListDomain(50, children?.length)
     );
     const items = useAsyncValue(virtualizedListDomain.broadcasts.items);
+    useAsyncValue(virtualizedListDomain.broadcasts.headerHeight);
+    useAsyncValue(virtualizedListDomain.broadcasts.footerHeight);
+
     const containerRef = useRef<HTMLDivElement | null>(null);
     const height = virtualizedListDomain.getHeight();
 
@@ -58,6 +65,10 @@ export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
     }, [updateViewport]);
 
     const forkedRef = useForkRef(ref, containerRef);
+    const contentStyle: React.CSSProperties = {
+      height: `${height}px`,
+      position: "relative",
+    };
 
     return (
       <div
@@ -66,7 +77,14 @@ export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
         style={style}
         onScroll={({ currentTarget }) => updateViewport(currentTarget)}
       >
-        <div style={{ height: `${height}px` }}>
+        <div style={contentStyle}>
+          {header && (
+            <VirtualizedListHeader
+              virtualizedListDomain={virtualizedListDomain}
+            >
+              {header}
+            </VirtualizedListHeader>
+          )}
           {items.map((item) => {
             return (
               <VirtualizedListItem
@@ -79,6 +97,11 @@ export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
             );
           })}
         </div>
+        {footer && (
+          <VirtualizedListFooter virtualizedListDomain={virtualizedListDomain}>
+            {footer}
+          </VirtualizedListFooter>
+        )}
       </div>
     );
   }

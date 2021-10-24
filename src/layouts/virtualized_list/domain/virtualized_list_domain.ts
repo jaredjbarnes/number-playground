@@ -92,13 +92,17 @@ export class VirtualizedListDomain extends Domain<VirtualizedListState> {
   }
 
   setHeaderHeight(value: number) {
-    this.state.headerHeight.setValue(value);
-    this.update();
+    if (this.state.headerHeight.getValue() !== value) {
+      this.state.headerHeight.setValue(value);
+      this.update();
+    }
   }
 
   setFooterHeight(value: number) {
-    this.state.footerHeight.setValue(value);
-    this.update();
+    if (this.state.footerHeight.getValue() !== value) {
+      this.state.footerHeight.setValue(value);
+      this.update();
+    }
   }
 
   getHeight() {

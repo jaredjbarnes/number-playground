@@ -1,6 +1,20 @@
 import React, { useCallback } from "react";
+import { createUseStyles } from "react-jss";
 import { useForkRef } from "../../../hooks/use_fork_ref";
 import { VirtualizedListDomain } from "../domain/virtualized_list_domain";
+
+const useStyles = createUseStyles(
+  {
+    container: {
+      position: "sticky",
+      bottom: 0,
+      width: "100%",
+    },
+  },
+  {
+    name: "VirtualizedListFooter",
+  }
+);
 
 export interface Props {
   children: React.ReactNode;
@@ -12,16 +26,23 @@ export const VirtualizedListFooter = React.forwardRef<HTMLDivElement, Props>(
     { children, virtualizedListDomain }: Props,
     ref
   ) {
+    const classes = useStyles();
     const mountRef = useCallback(
       (element: HTMLDivElement) => {
-        const height = element.offsetHeight;
-        virtualizedListDomain.setFooterHeight(height);
+        if (element != null) {
+          const height = element.offsetHeight;
+          virtualizedListDomain.setHeaderHeight(height);
+        }
       },
       [virtualizedListDomain]
     );
 
     const forkedRef = useForkRef(mountRef, ref);
 
-    return <div ref={forkedRef}>{children}</div>;
+    return (
+      <div className={classes.container} ref={forkedRef}>
+        {children}
+      </div>
+    );
   }
 );
