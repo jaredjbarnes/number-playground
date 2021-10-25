@@ -12,6 +12,7 @@ export interface Item extends Index {
 
 interface VirtualizedListState extends StateLike {
   items: ObservableValue<Item[]>;
+  scrollAdjustment: ObservableValue<number>;
   headerHeight: ObservableValue<number>;
   footerHeight: ObservableValue<number>;
 }
@@ -22,6 +23,7 @@ export class VirtualizedListDomain extends Domain<VirtualizedListState> {
     bottom: 0,
   };
 
+  private buffer = 0;
   private virtualAxis: VirtualizedAxis;
   private estimatedSize: number;
   private factory = new Factory<Item>(() => {
@@ -38,6 +40,7 @@ export class VirtualizedListDomain extends Domain<VirtualizedListState> {
       items: new ObservableValue<Item[]>([]),
       headerHeight: new ObservableValue(0),
       footerHeight: new ObservableValue(0),
+      scrollAdjustment: new ObservableValue(0),
     });
     this.estimatedSize = estimatedSize;
     this.virtualAxis = new VirtualizedAxis(estimatedSize, length);
@@ -48,8 +51,8 @@ export class VirtualizedListDomain extends Domain<VirtualizedListState> {
 
     const headerHeight = this.state.headerHeight.getValue();
     const indexes = this.virtualAxis.getIndexesWithinRange(
-      this.viewport.top,
-      this.viewport.bottom
+      Math.max(this.viewport.top - this.buffer, 0),
+      Math.min(this.viewport.bottom + this.buffer)
     );
 
     this.state.items.transformValue((items) => {
@@ -80,10 +83,34 @@ export class VirtualizedListDomain extends Domain<VirtualizedListState> {
   }
 
   setItemHeight(index: number, height: number) {
-    const size = this.virtualAxis.getCustomSize(index);
+    let size = this.virtualAxis.getCustomSize(index);
     if (size !== height) {
+      size = size == null ? height : size;
       this.virtualAxis.setCustomSize(index, height);
+      this.checkViewportAdjustment(index, height - size);
       this.update();
+    }
+  }
+
+  /**
+   * This keeps the first item on the screen sticky to the viewport as items above it
+   * shift around.
+   * @param index The index to check against the viewport.
+   * @param difference The height delta.
+   */
+  checkViewportAdjustment(index: number, difference: number) {
+    if (difference === 0) {
+      return;
+    }
+
+    const indexes = this.virtualAxis.getIndexesWithinRange(
+      this.viewport.top,
+      this.viewport.bottom
+    );
+    const firstIndex = indexes[0];
+
+    if (firstIndex != null && firstIndex.index > index) {
+      this.state.scrollAdjustment.setValue(difference);
     }
   }
 
@@ -101,6 +128,13 @@ export class VirtualizedListDomain extends Domain<VirtualizedListState> {
   setFooterHeight(value: number) {
     if (this.state.footerHeight.getValue() !== value) {
       this.state.footerHeight.setValue(value);
+      this.update();
+    }
+  }
+
+  setBuffer(value: number) {
+    if (this.buffer !== value) {
+      this.buffer = value;
       this.update();
     }
   }

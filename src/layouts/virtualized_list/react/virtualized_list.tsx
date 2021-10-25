@@ -39,6 +39,13 @@ export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
     const [virtualizedListDomain] = useState(
       () => new VirtualizedListDomain(50, children?.length)
     );
+
+    useLayoutEffect(() => {
+      if (typeof buffer === "number") {
+        virtualizedListDomain.setBuffer(buffer);
+      }
+    }, [buffer, virtualizedListDomain]);
+
     const items = useAsyncValue(virtualizedListDomain.broadcasts.items);
     const headerHeight = useAsyncValue(
       virtualizedListDomain.broadcasts.headerHeight
@@ -50,16 +57,20 @@ export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
     const containerRef = useRef<HTMLDivElement | null>(null);
     const height = virtualizedListDomain.getHeight();
 
+    const scrollAdjustment = useAsyncValue(
+      virtualizedListDomain.broadcasts.scrollAdjustment
+    );
+
     const updateViewport = useCallback(
       (element: HTMLDivElement) => {
         const scrollTop = element.scrollTop;
-        const top = Math.max(scrollTop - buffer, 0);
+        const top = Math.max(scrollTop, 0);
         const height = element.offsetHeight;
-        const bottom = scrollTop + height + buffer;
+        const bottom = scrollTop + height;
 
         virtualizedListDomain.updateViewport(top, bottom);
       },
-      [virtualizedListDomain, buffer]
+      [virtualizedListDomain]
     );
 
     useLayoutEffect(() => {
@@ -67,6 +78,13 @@ export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
         updateViewport(containerRef.current);
       }
     }, [updateViewport]);
+
+    useLayoutEffect(() => {
+      const container = containerRef.current;
+      if (container != null) {
+        container.scrollTop = container.scrollTop + scrollAdjustment;
+      }
+    }, [scrollAdjustment]);
 
     const forkedRef = useForkRef(ref, containerRef);
     const contentStyle: React.CSSProperties = {
