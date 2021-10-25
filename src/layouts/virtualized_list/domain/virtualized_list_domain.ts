@@ -112,11 +112,11 @@ export class VirtualizedListDomain extends Domain<VirtualizedListState> {
     const firstIndex = indexes[0];
 
     if (firstIndex != null && firstIndex.index >= index) {
+      this.state.scrollAdjustment.setValue(difference);
       this.updateViewport(
         this.viewport.top + difference,
         this.viewport.bottom + difference
       );
-      this.state.scrollAdjustment.setValue(difference);
     }
   }
 
