@@ -40,7 +40,7 @@ export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
       () => new VirtualizedListDomain(50, children?.length)
     );
     const items = useAsyncValue(virtualizedListDomain.broadcasts.items);
-    useAsyncValue(virtualizedListDomain.broadcasts.headerHeight);
+    const headerHeight  = useAsyncValue(virtualizedListDomain.broadcasts.headerHeight);
     useAsyncValue(virtualizedListDomain.broadcasts.footerHeight);
 
     const containerRef = useRef<HTMLDivElement | null>(null);
@@ -67,6 +67,7 @@ export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
     const forkedRef = useForkRef(ref, containerRef);
     const contentStyle: React.CSSProperties = {
       height: `${height}px`,
+      minHeight: `calc(100% - ${headerHeight}px)`,
       position: "relative",
     };
 

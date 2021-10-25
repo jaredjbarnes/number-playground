@@ -567,3 +567,51 @@ export const HeaderAndFooterItems = () => {
     </VirtualizedList>
   );
 };
+
+export const FewItems = () => {
+  return (
+    <VirtualizedList
+      buffer={200}
+      style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
+    >
+      <div>Hello World!</div>
+      <div style={{ height: "30px", backgroundColor: "red" }}>0</div>
+      <div style={{ height: "62px", backgroundColor: "blue" }}>1</div>
+    </VirtualizedList>
+  );
+};
+
+export const FewItemsWithHeaderAndFooter = () => {
+  return (
+    <VirtualizedList
+      buffer={200}
+      header={
+        <div
+          style={{
+            backgroundColor: "white",
+            height: "60px",
+            boxShadow: "0px 0px 10px rgba(0,0,0,0.25)",
+          }}
+        >
+          Header
+        </div>
+      }
+      footer={
+        <div
+          style={{
+            backgroundColor: "white",
+            height: "60px",
+            boxShadow: "0px 0px 10px rgba(0,0,0,0.25)",
+          }}
+        >
+          Footer
+        </div>
+      }
+      style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
+    >
+      <div>Hello World!</div>
+      <div style={{ height: "30px", backgroundColor: "red" }}>0</div>
+      <div style={{ height: "62px", backgroundColor: "blue" }}>1</div>
+    </VirtualizedList>
+  );
+};
