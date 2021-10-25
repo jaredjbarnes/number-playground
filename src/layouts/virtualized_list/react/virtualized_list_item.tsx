@@ -1,5 +1,6 @@
 import React, { useCallback } from "react";
 import { useForkRef } from "../../../hooks/use_fork_ref";
+import { useResizeEffect } from "../../../hooks/use_resize_effect";
 import { VirtualizedListDomain, Item } from "../domain/virtualized_list_domain";
 import { createUseStyles } from "react-jss";
 
@@ -30,10 +31,10 @@ export const VirtualizedListItem = React.forwardRef<HTMLDivElement, Props>(
   ) {
     const index = item.index;
     const classes = useStyles();
-    const y = item.start + item.offset;
+    const y = item.start;
 
-    const mountRef = useCallback(
-      (element: HTMLDivElement | null) => {
+    const updateHeight = useCallback(
+      (element: HTMLElement | null) => {
         if (element != null) {
           const height = element.offsetHeight;
           virtualizedListDomain.setItemHeight(index, height);
@@ -42,7 +43,10 @@ export const VirtualizedListItem = React.forwardRef<HTMLDivElement, Props>(
       [index, virtualizedListDomain]
     );
 
-    const forkedRef = useForkRef(mountRef, ref);
+    const mountRef = useCallback((e) => updateHeight(e), [updateHeight]);
+    const resizeRef = useResizeEffect((e) => updateHeight(e), 16);
+    const forkedRef = useForkRef(mountRef, resizeRef, ref);
+
     const style = {
       transform: `translate(0px, ${y}px)`,
     };

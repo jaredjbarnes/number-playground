@@ -40,8 +40,12 @@ export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
       () => new VirtualizedListDomain(50, children?.length)
     );
     const items = useAsyncValue(virtualizedListDomain.broadcasts.items);
-    const headerHeight  = useAsyncValue(virtualizedListDomain.broadcasts.headerHeight);
-    useAsyncValue(virtualizedListDomain.broadcasts.footerHeight);
+    const headerHeight = useAsyncValue(
+      virtualizedListDomain.broadcasts.headerHeight
+    );
+    const footerHeight = useAsyncValue(
+      virtualizedListDomain.broadcasts.footerHeight
+    );
 
     const containerRef = useRef<HTMLDivElement | null>(null);
     const height = virtualizedListDomain.getHeight();
@@ -67,7 +71,7 @@ export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
     const forkedRef = useForkRef(ref, containerRef);
     const contentStyle: React.CSSProperties = {
       height: `${height}px`,
-      minHeight: `calc(100% - ${headerHeight}px)`,
+      minHeight: `calc(100% - ${headerHeight + footerHeight}px)`,
       position: "relative",
     };
 
@@ -78,14 +82,12 @@ export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
         style={style}
         onScroll={({ currentTarget }) => updateViewport(currentTarget)}
       >
+        {header && (
+          <VirtualizedListHeader virtualizedListDomain={virtualizedListDomain}>
+            {header}
+          </VirtualizedListHeader>
+        )}
         <div style={contentStyle}>
-          {header && (
-            <VirtualizedListHeader
-              virtualizedListDomain={virtualizedListDomain}
-            >
-              {header}
-            </VirtualizedListHeader>
-          )}
           {items.map((item) => {
             return (
               <VirtualizedListItem

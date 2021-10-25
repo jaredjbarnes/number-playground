@@ -31,7 +31,7 @@ export const VirtualizedListFooter = React.forwardRef<HTMLDivElement, Props>(
       (element: HTMLDivElement) => {
         if (element != null) {
           const height = element.offsetHeight;
-          virtualizedListDomain.setHeaderHeight(height);
+          virtualizedListDomain.setFooterHeight(height);
         }
       },
       [virtualizedListDomain]
