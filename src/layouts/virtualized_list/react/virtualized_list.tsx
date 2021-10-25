@@ -7,6 +7,7 @@ import { createUseStyles } from "react-jss";
 import clsx from "clsx";
 import { useAsyncValue } from "../../../hex/hooks/useAsyncValue";
 import { useForkRef } from "../../../hooks/use_fork_ref";
+import { useAsyncValueEffect } from "../../../hex/hooks/useAsyncValueEffect";
 
 const useStyles = createUseStyles(
   {
@@ -55,11 +56,9 @@ export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
     );
 
     const containerRef = useRef<HTMLDivElement | null>(null);
-    const height = virtualizedListDomain.getHeight();
+    const forkedRef = useForkRef(ref, containerRef);
 
-    const scrollAdjustment = useAsyncValue(
-      virtualizedListDomain.broadcasts.scrollAdjustment
-    );
+    const height = virtualizedListDomain.getHeight();
 
     const updateViewport = useCallback(
       (element: HTMLDivElement) => {
@@ -79,19 +78,18 @@ export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
       }
     }, [updateViewport]);
 
-    useLayoutEffect(() => {
-      const container = containerRef.current;
-      if (container != null) {
-        container.scrollTop = container.scrollTop + scrollAdjustment;
-      }
-    }, [scrollAdjustment]);
-
-    const forkedRef = useForkRef(ref, containerRef);
     const contentStyle: React.CSSProperties = {
       height: `${height}px`,
       minHeight: `calc(100% - ${headerHeight + footerHeight}px)`,
       position: "relative",
     };
+
+    useAsyncValueEffect((value) => {
+      const container = containerRef.current;
+      if (container != null) {
+        container.scrollTop = container.scrollTop + value;
+      }
+    }, virtualizedListDomain.broadcasts.scrollAdjustment);
 
     return (
       <div

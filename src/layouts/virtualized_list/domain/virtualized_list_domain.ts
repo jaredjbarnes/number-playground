@@ -84,10 +84,12 @@ export class VirtualizedListDomain extends Domain<VirtualizedListState> {
 
   setItemHeight(index: number, height: number) {
     let size = this.virtualAxis.getCustomSize(index);
+    size = size == null ? this.estimatedSize : size;
+
     if (size !== height) {
       size = size == null ? height : size;
-      this.virtualAxis.setCustomSize(index, height);
       this.checkViewportAdjustment(index, height - size);
+      this.virtualAxis.setCustomSize(index, height);
       this.update();
     }
   }
@@ -109,7 +111,11 @@ export class VirtualizedListDomain extends Domain<VirtualizedListState> {
     );
     const firstIndex = indexes[0];
 
-    if (firstIndex != null && firstIndex.index > index) {
+    if (firstIndex != null && firstIndex.index >= index) {
+      this.updateViewport(
+        this.viewport.top + difference,
+        this.viewport.bottom + difference
+      );
       this.state.scrollAdjustment.setValue(difference);
     }
   }
