@@ -1,3 +1,4 @@
+import { DistinctValue } from "../../../hex/distinct_value";
 import { Domain, StateLike } from "../../../hex/domain";
 import { ObservableValue } from "../../../hex/ObservableValue";
 import { Factory } from "../../virtualized_grid/domain/factory";
@@ -39,7 +40,7 @@ export class VirtualizedListDomain extends Domain<VirtualizedListState> {
     super({
       items: new ObservableValue<Item[]>([]),
       headerHeight: new ObservableValue(0),
-      footerHeight: new ObservableValue(0),
+      footerHeight: new DistinctValue(0),
       scrollAdjustment: new ObservableValue(0),
     });
     this.estimatedSize = estimatedSize;

@@ -73,8 +73,9 @@ export const VirtualizedList = React.forwardRef<HTMLDivElement, Props>(
     );
 
     useLayoutEffect(() => {
-      if (containerRef.current != null) {
-        updateViewport(containerRef.current);
+      const container = containerRef.current;
+      if (container != null) {
+        updateViewport(container);
       }
     }, [updateViewport]);
 

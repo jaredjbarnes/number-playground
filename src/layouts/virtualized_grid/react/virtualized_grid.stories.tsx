@@ -7,7 +7,13 @@ export default {
   title: "virtualized_grid",
 };
 
-const renderCell = (cell: Cell<React.ReactElement>) => {
+function CellPosition({
+  cell,
+  children,
+}: {
+  cell: Cell<React.ReactElement>;
+  children: React.ReactNode;
+}) {
   const style: React.CSSProperties = {
     position: "absolute",
     top: 0,
@@ -24,11 +30,19 @@ const renderCell = (cell: Cell<React.ReactElement>) => {
     boxSizing: "border-box",
     zIndex: 1,
   };
+
   return (
-    <div
-      key={`${cell.columnIndex}|${cell.rowIndex}`}
-      style={style}
-    >{`(${cell.columnIndex}, ${cell.rowIndex})`}</div>
+    <div key={`${cell.columnIndex}|${cell.rowIndex}`} style={style}>
+      {children}
+    </div>
+  );
+}
+
+const renderCell = (cell: Cell<React.ReactElement>) => {
+  return (
+    <CellPosition
+      cell={cell}
+    >{`(${cell.columnIndex}, ${cell.rowIndex})`}</CellPosition>
   );
 };
 
@@ -156,6 +170,32 @@ export const SmallTable = () => {
       renderColumnHeader={renderColumnHeader}
       renderRowHeader={renderRowHeader}
       defaultColumnWidth={120}
+      defaultRowHeight={60}
+    />
+  );
+};
+
+export const BigNumberTable = () => {
+  return (
+    <VirtualizedGrid
+      style={{ position: "absolute", top: 0, right: 0, bottom: 0, left: 0 }}
+      rowsLength={200}
+      columnsLength={1}
+      renderCell={(cell) => {
+        return (
+          <CellPosition cell={cell}>
+            {(
+              (4 ** (3 * cell.rowIndex) - 1) %
+              (6 * cell.rowIndex + 1)
+            ).toString()}
+          </CellPosition>
+        );
+      }}
+      rowHeaderWidth={50}
+      columnHeaderHeight={30}
+      renderColumnHeader={renderColumnHeader}
+      renderRowHeader={renderRowHeader}
+      defaultColumnWidth={200}
       defaultRowHeight={60}
     />
   );

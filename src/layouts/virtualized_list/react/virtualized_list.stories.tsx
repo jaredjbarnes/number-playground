@@ -9,7 +9,6 @@ export default {
 export const ManyItems = () => {
   return (
     <VirtualizedList
-      buffer={200}
       style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}
     >
       <div>Hello World!</div>
