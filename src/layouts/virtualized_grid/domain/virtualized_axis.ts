@@ -64,7 +64,9 @@ export class VirtualizedAxis {
         customSize.size = size;
       }
     } else {
-      this.customSizesMap[index] = { index, size };
+      if (size !== this.defaultIndexSize) {
+        this.customSizesMap[index] = { index, size };
+      }
     }
 
     this.generateRegions();
